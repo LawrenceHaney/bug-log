@@ -1,0 +1,10 @@
+.btn-primary {
+  color: $light;
+  background-color: $primary;
+  border-color: darken($color: $primary, $amount: 10);
+  border-width: medium;
+}
+
+.bug-container:nth-child(even){
+  background-color: antiquewhite;
+}
