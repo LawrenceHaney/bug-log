@@ -11,7 +11,12 @@
           </h6>
         </div>
       <div class=" card col-9 bg-light p-4">
+        <p v-if="activeBug.closed == false"> open</p>
+    <p v-else>closed</p>
+        <p>
         {{activeBug.description}}
+        </p>
+        <button type="button" @click="closeBug" class="btn btn-outline-danger">Close Bug</button>
       </div>
     </div>
     <div class="row justify-content-center">
@@ -55,6 +60,9 @@ export default {
   methods:{
     addNote(){
       this.$store.dispatch("addNote", this.newNote)
+    },
+    closeBug(){
+      this.$store.dispatch("deleteBug", this.$route.params.bugId)
     }
   }
 

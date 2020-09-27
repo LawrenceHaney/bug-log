@@ -32,8 +32,12 @@ class BugService {
     }
     return data;
   }
-  delete(id, userEmail, update){
-    this.edit(id, userEmail, update)
+  async delete(id, userEmail, update){
+    let data = await dbContext.Bugs.findOneAndUpdate({ _id: id, creatorEmail: userEmail }, update, { new: true })
+    if (!data) {
+      throw new BadRequest("Invalid ID");
+    }
+    return data
   }
 
 }

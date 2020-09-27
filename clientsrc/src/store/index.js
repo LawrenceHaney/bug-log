@@ -1,6 +1,5 @@
 import { STATES } from "mongoose";
 import Vue from "vue";
-import { delete } from "vue/types/umd";
 import Vuex from "vuex";
 import router from "../router";
 import { api } from "./AxiosService"
@@ -82,10 +81,14 @@ export default new Vuex.Store({
         console.error(error)
       }
     },
-    async deleteBug({commit}, id){
+    async deleteBug({commit, state}, id,){
       try {
-        let res = await api.delete("bugs/"+ id)
-          commit("setActiveBug", res.data)
+        if(this.state.activebug.closed == false){
+        this.state.activebug.closed = true
+        let update = this.state.activebug
+        let res = await api.delete("bugs/"+ id, update)
+          commit("setActiveBug", update)
+          console.log(res)}
       } catch (error) {
         console.error(error)
       }

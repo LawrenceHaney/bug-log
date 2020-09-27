@@ -8,7 +8,7 @@
     <br>
     {{bugData.createdAt}}
     </p>
-    <p v-if="!bugData.closed"> open</p>
+    <p v-if="bugData.closed == false"> open</p>
     <p v-else>closed</p>
   </router-link>
 </template>
