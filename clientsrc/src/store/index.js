@@ -96,7 +96,7 @@ export default new Vuex.Store({
     },
 
     //Notes
-    async addNote({ commit, dispatch }, note, state){
+    async addNote({ commit, dispatch }, note,){
       try {
         let res = await api.post("notes", note)
           .then(data => {dispatch("getNotes", data.data.bug)})
@@ -114,5 +114,15 @@ export default new Vuex.Store({
       catch (error) {
         console.error(error)}     
     },
+    async deleteNote({ commit, dispatch, state }, note){
+      try {
+        await api.delete("notes/" + note.id)
+          commit("setActiveNotes", this.state.activenotes.filter(n => n.id = note.id))
+      } catch (error) {
+        console.error(error);
+        
+      }
+    }
+    
   }
 });

@@ -9,7 +9,7 @@
           <h6>
             {{activeBug.creatorEmail}}
           </h6>
-          <button @click="editBug" type="button" class="btn btn-outline-success"></button>
+          <button @click="editBug" type="button" class="btn btn-outline-success">Edit</button>
         </div>
       <div class=" card col-9 bg-light p-4">
         <p v-if="activeBug.closed == false"> open</p>
@@ -21,13 +21,13 @@
       </div>
     </div>
     <div class="row justify-content-center">
-      <div class="col-10 d-flex bg-light">
-        <div v-for="note in notes" :key="note.id" class="notes">{{note.content}}</div>
+      <div class="col-10 bg-light">
+        <note v-for="note in notes" :key="note.id" class="notes" :noteData="note" />
       </div>
       <div class="col-10">
         <form @submit.prevent="addNote" class="bg-secondary">
           <input type="text" :placeholder="newNote.content" v-model="newNote.content" required class="col-10 m-1" />
-          <button type="submit" class="btn btn-outline-light m-1 fade-in">Create Bug</button>
+          <button type="submit" class="btn btn-outline-light m-1 fade-in">Create Note</button>
     </form>
       </div>
     </div>
@@ -36,6 +36,7 @@
 
 <script>
 import Swal from 'sweetalert2'
+import note from '../components/note'
 export default {
   name: "BugDetails",
     data(){
@@ -59,6 +60,9 @@ export default {
     notes(){
       return this.$store.state.activenotes
     }
+  },
+  components:{
+    note
   },
   methods:{
     addNote(){
