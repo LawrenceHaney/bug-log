@@ -9,6 +9,7 @@
           <h6>
             {{activeBug.creatorEmail}}
           </h6>
+          <button @click="editBug" type="button" class="btn btn-outline-success"></button>
         </div>
       <div class=" card col-9 bg-light p-4">
         <p v-if="activeBug.closed == false"> open</p>
@@ -34,12 +35,22 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 export default {
   name: "BugDetails",
+    data(){
+      return{
+        newNote: {
+            content: "words here",
+            bug: this.$route.params.bugId,
+            flagged: "pending" 
+          },
+        newBug: { id: this.$route.params.bugId}
+      }
+    },
   mounted(){
     this.$store.dispatch("getBugById", this.$route.params.bugId)
     this.$store.dispatch("getNotes", this.$route.params.bugId)
-
   },
   computed: {
     activeBug(){
@@ -49,23 +60,41 @@ export default {
       return this.$store.state.activenotes
     }
   },
-  data(){
-    return{
-      newNote: {
-          content: "words here",
-          bug: this.$route.params.bugId,
-          flagged: "pending" }
-    }
-  },
   methods:{
     addNote(){
       this.$store.dispatch("addNote", this.newNote)
     },
     closeBug(){
       this.$store.dispatch("deleteBug", this.$route.params.bugId)
-    }
+    },
+    editBug(){
+      	Swal.fire({
+          title: 'Edit bug',
+          html:
+            '<h6>Edit title</h6>' +
+            '<input id="swal-input1" class="swal2-input" v-model="newBug.title">' +
+            '<h6>Edit Description</h6>' +
+            '<input id="swal-input2" class="swal2-input" v-model="newBug.description">',
+            focusConfirm: false,
+          preConfirm: () => {
+            this.newBug.title= document.getElementById('swal-input1').value,
+            this.newBug.description= document.getElementById('swal-input2').value
   }
-
+}).then((result) => {
+          if (result.isConfirmed) {
+            console.log(this.newBug)
+            this.$store.dispatch("editBug", this.newBug)
+            Swal.fire({
+              title: 'Edit!',
+              text: 'Your Bug has been edited.',
+              confirmButtonText: 'OK',
+              icon: 'success'
+            })
+          }
+        })
+  }
+    
+  }
 }
 </script>
 

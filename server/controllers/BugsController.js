@@ -50,7 +50,7 @@ async edit(req, res, next) {
 
 async delete(req, res, next) {
     try {
-        let data = await bugService.delete(req.params.id, req.userInfo.email, req.body)
+        let data = await bugService.edit(req.params.id, req.userInfo.email, req.body)
         return res.send("Successfully closed", data)
     } catch (error) { next(error) }
 }

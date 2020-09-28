@@ -86,6 +86,7 @@ export default new Vuex.Store({
         if(this.state.activebug.closed == false){
         this.state.activebug.closed = true
         let update = this.state.activebug
+        console.log(update);
         let res = await api.delete("bugs/"+ id, update)
           commit("setActiveBug", update)
           console.log(res)}
