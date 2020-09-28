@@ -1,7 +1,7 @@
 <template>
-  <div class="container-fluid bg-dark">
+  <div class="container-fluid background">
     <div v-if="!activeBug" class="div"> loding ...</div>
-    <div v-else class="row">
+    <div v-else class="row justify-content-center">
       <div class="card col-3 bg-light">
         <h1>
           {{activeBug.title}}
@@ -9,23 +9,26 @@
           <h6>
             {{activeBug.creatorEmail}}
           </h6>
-          <button @click="editBug" type="button" class="btn btn-outline-success">Edit</button>
+          <button v-if="activeBug.closed == false" @click="editBug" type="button" class="btn btn-outline-success">Edit</button>
         </div>
-      <div class=" card col-9 bg-light p-4">
-        <p v-if="activeBug.closed == false"> open</p>
-    <p v-else>closed</p>
+      <div class=" card col-7 bg-light p-4">
+        <p v-if="activeBug.closed == false" class="text-success text-right"> open</p>
+        <p v-else class="text-danger text-right">closed</p>
         <p>
         {{activeBug.description}}
         </p>
-        <button type="button" @click="closeBug" class="btn btn-outline-danger">Close Bug</button>
+        <button v-if="activeBug.closed == false" type="button" @click="closeBug" class="btn btn-outline-danger">Close Bug</button>
       </div>
     </div>
     <div class="row justify-content-center">
-      <div class="col-10 bg-light">
+      <div v-if="notes.length > 0" class="col-10 bg-light">
         <note v-for="note in notes" :key="note.id" class="notes" :noteData="note" />
       </div>
-      <div class="col-10">
-        <form @submit.prevent="addNote" class="bg-secondary">
+      <div v-else class="spacer col-10 bg-light d-flex justify-content-around">
+        <p class="muted align-self-center">nothing here boss</p>
+      </div>
+      <div class="col-10 bg-secondary pt-5">
+        <form @submit.prevent="addNote" class="justify-content-around">
           <input type="text" :placeholder="newNote.content" v-model="newNote.content" required class="col-10 m-1" />
           <button type="submit" class="btn btn-outline-light m-1 fade-in">Create Note</button>
     </form>
@@ -68,9 +71,26 @@ export default {
     addNote(){
       this.$store.dispatch("addNote", this.newNote)
     },
-    closeBug(){
-      this.$store.dispatch("deleteBug", this.$route.params.bugId)
-    },
+    closeBug(){Swal.fire({
+  title: 'Are you sure?',
+  text: "You won't be able to revert this!",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Yes, close it!'
+}).then((result) => {
+  if (result.isConfirmed) {
+    this.$store.dispatch("deleteBug", this.$route.params.bugId)
+    Swal.fire(
+      'Hope you fixed it!',
+      'Your Bug has been closed.',
+      'success'
+    )
+  }
+})},
+
+    
     editBug(){
       	Swal.fire({
           title: 'Edit bug',

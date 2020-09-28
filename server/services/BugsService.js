@@ -26,19 +26,20 @@ class BugService {
   }
 
   async edit(id, userEmail, update) {
+    update.closedDate = Date.now()
     let data = await dbContext.Bugs.findOneAndUpdate({ _id: id, creatorEmail: userEmail }, update, { new: true })
     if (!data) {
       throw new BadRequest("Invalid ID");
     }
     return data;
   }
-  // async delete(id, userEmail, update){
-  //   let data = await dbContext.Bugs.findOneAndUpdate({ _id: id, creatorEmail: userEmail }, update, { new: true })
-  //   if (!data) {
-  //     throw new BadRequest("Invalid ID");
-  //   }
-  //   return data
-  // }
+  async delete(id, userEmail, update){
+    let data = await dbContext.Bugs.findOneAndUpdate({ _id: id, creatorEmail: userEmail }, {closed: true, closedDate: Date.now() }, { new: true })
+    if (!data) {
+      throw new BadRequest("Invalid ID");
+    }
+    return data
+  }
 
 }
 

@@ -85,7 +85,7 @@ export default new Vuex.Store({
       try {
         if(this.state.activebug.closed == false){
         this.state.activebug.closed = true
-        let update = this.state.activebug
+        let update = state.activebug
         console.log(update);
         let res = await api.delete("bugs/"+ id, update)
           commit("setActiveBug", update)
@@ -117,10 +117,18 @@ export default new Vuex.Store({
     async deleteNote({ commit, dispatch, state }, note){
       try {
         await api.delete("notes/" + note.id)
-          commit("setActiveNotes", this.state.activenotes.filter(n => n.id = note.id))
+          .then(data => {commit("setActiveNotes", this.state.activenotes.filter(n => n.id != note.id))})
       } catch (error) {
         console.error(error);
         
+      }
+    },
+    async editNote({commit, state}, note){
+      try {
+        let res = await api.put("notes/" + note.id, note)
+          commit("setActiveNotes", [...this.state.activenotes.filter(n => n.id != res.data.id), res.data])
+      } catch (error) {
+        console.error(error)
       }
     }
     
